@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { categorizeNews } from '@/utils/categoryRules'
 
 describe('Category Rules', () => {
   it('should categorize finance news correctly', () => {
@@ -27,8 +28,8 @@ describe('Category Rules', () => {
 
   it('should return uncategorized for unknown content', () => {
     const news = {
-      title: '科技新闻：新手机发布',
-      content: '产品介绍...',
+      title: '美食新闻：新餐厅开业',
+      content: '菜品介绍...',
     }
     expect(categorizeNews(news)).toBe('未分类')
   })

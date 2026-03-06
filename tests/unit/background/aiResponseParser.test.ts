@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { parseAIResponse, validatePrediction } from '@/utils/aiResponseParser'
 
 describe('AI Response Parser', () => {
   describe('parseAIResponse', () => {
