@@ -1,0 +1,22 @@
+{
+  "news": [
+    {
+      "id": 1,
+      "title": "A股三大指数集体收涨",
+      "content": "沪指涨0.5%，深成指涨0.8%，创业板指涨1.2%",
+      "source": "新浪财经",
+      "category": "财经",
+      "url": "https://finance.sina.com.cn/test/1",
+      "publish_time": "2026-03-06T10:30:00"
+    },
+    {
+      "id": 2,
+      "title": "央行降准0.5个百分点",
+      "content": "中国人民银行决定下调金融机构存款准备金率",
+      "source": "新华网",
+      "category": "财经",
+      "url": "https://www.xinhuanet.com/test/2",
+      "publish_time": "2026-03-06T09:15:00"
+    }
+  ]
+}

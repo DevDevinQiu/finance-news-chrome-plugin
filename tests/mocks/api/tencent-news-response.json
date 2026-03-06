@@ -1,0 +1,19 @@
+{
+  "retcode": 0,
+  "data": {
+    "newslist": [
+      {
+        "title": "A股三大指数集体收涨",
+        "url": "https://finance.sina.com.cn/test/1",
+        "source": "新浪财经",
+        "time": "2026-03-06 10:30:00"
+      },
+      {
+        "title": "央行降准0.5个百分点",
+        "url": "https://www.xinhuanet.com/test/2",
+        "source": "新华网",
+        "time": "2026-03-06 09:15:00"
+      }
+    ]
+  }
+}

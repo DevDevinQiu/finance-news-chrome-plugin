@@ -1,0 +1,10 @@
+{
+  "prediction": {
+    "type": "open_forecast",
+    "result": "看涨",
+    "confidence": 0.75,
+    "reason": "今日市场情绪积极，多板块轮动上涨，预计大盘高开后有望延续上涨趋势",
+    "date": "2026-03-06",
+    "time": "09:30"
+  }
+}
