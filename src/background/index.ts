@@ -2,6 +2,9 @@
  * Background Service Worker
  */
 
+import { fetchAllNews } from '../shared/services/newsFetch'
+import { setNewsList, setStats } from '../shared/utils/storage'
+
 console.log('Background Service Worker initialized')
 
 // 初始化统计数据
@@ -11,7 +14,8 @@ const initializeStats = async () => {
     await chrome.storage.local.set({
       stats: {
         newsCount: 0,
-        lastUpdate: new Date().toLocaleString()
+        lastUpdate: new Date().toLocaleString(),
+        updateInterval: 5
       }
     })
   }
@@ -56,13 +60,42 @@ async function handleGetStats() {
 // 刷新数据
 async function handleRefreshData() {
   console.log('Refresh data requested')
-  const stats = await handleGetStats()
-  await chrome.storage.local.set({
-    stats: {
-      ...stats,
-      lastUpdate: new Date().toLocaleString()
+
+  try {
+    // 获取用户设置
+    const settingsResult = await chrome.storage.local.get('settings')
+    const settings = settingsResult.settings || {
+      newsSources: ['sina', 'eastmoney', 'tencent'],
+      refreshInterval: 5,
+      maxNewsCount: 50
     }
-  })
+
+    // 从启用的新闻源抓取新闻
+    const enabledSources = settings.newsSources
+    console.log('Fetching news from sources:', enabledSources)
+
+    const news = await fetchAllNews(enabledSources)
+    console.log(`Fetched ${news.length} news items`)
+
+    // 限制新闻数量
+    const limitedNews = news.slice(0, settings.maxNewsCount)
+
+    // 保存新闻到 storage
+    await setNewsList(limitedNews)
+
+    // 更新统计数据
+    const stats = await handleGetStats()
+    const now = new Date().toLocaleString()
+    await setStats({
+      ...stats,
+      newsCount: limitedNews.length,
+      lastUpdate: now
+    })
+
+    console.log('Refresh completed successfully')
+  } catch (error) {
+    console.error('Failed to refresh data:', error)
+  }
 }
 
 // 更新统计数据
