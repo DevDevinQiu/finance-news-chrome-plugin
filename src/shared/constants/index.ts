@@ -33,8 +33,6 @@ export const STORAGE_KEYS = {
 export const MESSAGE_TYPES = {
   GET_STATS: 'GET_STATS',
   REFRESH_DATA: 'REFRESH_DATA',
-  UPDATE_STATS: 'UPDATE_STATS',
-  GET_NEWS: 'GET_NEWS',
 } as const
 
 // 定时任务名称
