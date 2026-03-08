@@ -1,36 +1,43 @@
 {
   "manifest_version": 3,
-  "name": "AI金融信息推送 MVP",
-  "version": "1.0.0",
-  "description": "简化版财经新闻插件",
+  "name": "AI金融信息推送 (简化版)",
+  "version": "2.0.0",
+  "description": "自动聚合财经新闻和政治新闻，实时推送的Chrome扩展（简化版 - 无AI预测）",
+
   "permissions": [
     "storage",
     "alarms"
   ],
+
   "host_permissions": [
     "https://*/*",
     "http://*/*"
   ],
+
   "background": {
-    "service_worker": "src/background/index.js",
+    "service_worker": "src/background/index.ts",
     "type": "module"
   },
+
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["src/content/index.js"],
-      "css": ["src/content/panel.css"]
+      "js": ["dist/content-script/index.js"],
+      "css": ["dist/content-script/panel.css"]
     }
   ],
+
   "action": {
-    "default_popup": "src/popup/index.html",
+    "default_popup": "dist/popup/index.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
   },
-  "options_page": "src/options/index.html",
+
+  "options_page": "dist/options/index.html",
+
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
