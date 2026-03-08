@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "AI金融信息推送 (简化版)",
+  "name": "Finance News Chrome Extension (Simplified)",
   "version": "2.0.0",
-  "description": "自动聚合财经新闻和政治新闻，实时推送的Chrome扩展（简化版 - 无AI预测）",
+  "description": "Chrome extension for aggregating financial and political news (Simplified - No AI)",
 
   "permissions": [
     "storage",
