@@ -4,6 +4,7 @@
 
 import { fetchAllNews } from '../shared/services/newsFetch'
 import { setNewsList, setStats } from '../shared/utils/storage'
+import { DATA_MODE } from '../shared/constants'
 
 console.log('Background Service Worker initialized')
 
@@ -158,7 +159,3 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
     setupRefreshAlarm()
   }
 })
-
-// 初始化
-initializeStats()
-setupRefreshAlarm()

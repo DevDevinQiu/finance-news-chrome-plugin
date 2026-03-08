@@ -21,10 +21,14 @@ function getCurrentTime(): string {
 }
 
 /**
- * 模拟从新浪财经抓取新闻
+ * 从新浪财经抓取新闻
  * @returns Promise<News[]> 新浪财经新闻列表
  */
 export async function fetchNewsFromSina(): Promise<News[]> {
+  // TODO: 切换到真实 API 数据
+  // console.log('使用真实数据模式')
+  // return []
+
   // 模拟网络延迟
   await new Promise((resolve) => setTimeout(resolve, Math.random() * 500 + 300))
 
@@ -68,10 +72,14 @@ export async function fetchNewsFromSina(): Promise<News[]> {
 }
 
 /**
- * 模拟从东方财富网抓取新闻
+ * 从东方财富网抓取新闻
  * @returns Promise<News[]> 东方财富网新闻列表
  */
 export async function fetchNewsFromEastmoney(): Promise<News[]> {
+  // TODO: 切换到真实 API 数据
+  // console.log('使用真实数据模式')
+  // return []
+
   // 模拟网络延迟
   await new Promise((resolve) => setTimeout(resolve, Math.random() * 500 + 300))
 
@@ -129,7 +137,16 @@ export async function fetchNewsFromEastmoney(): Promise<News[]> {
  * 模拟从和讯网抓取新闻
  * @returns Promise<News[]> 和讯网新闻列表
  */
+/**
+ * 模拟从和讯网抓取新闻
+ * @returns Promise<News[]> 和讯网新闻列表
+ */
+
 export async function fetchNewsFromTencent(): Promise<News[]> {
+  // TODO: 切换到真实 API 数据
+  // console.log('使用真实数据模式')
+  // return []
+
   // 模拟网络延迟
   await new Promise((resolve) => setTimeout(resolve, Math.random() * 500 + 300))
 
