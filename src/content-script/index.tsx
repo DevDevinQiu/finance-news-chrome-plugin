@@ -97,9 +97,9 @@ function App() {
     }
   }, [])
 
-  // 刷新数据
+  // 刷新数据 - 发送消息给 background 抓取新数据
   const handleRefresh = () => {
-    loadNews()
+    chrome.runtime.sendMessage({ type: 'REFRESH_DATA' })
   }
 
   // 处理新闻点击
