@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 function App() {
   const handleRefresh = () => {
     // 发送消息给 background script 刷新新闻
-    chrome.runtime.sendMessage({ action: 'refreshNews' })
+    chrome.runtime.sendMessage({ type: 'REFRESH_DATA' })
   }
 
   const handleOpenSettings = () => {

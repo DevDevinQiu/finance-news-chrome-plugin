@@ -12,12 +12,12 @@ import { STORAGE_KEYS, DEFAULT_SETTINGS } from '../constants'
  */
 export async function getNewsList(): Promise<News[]> {
   return new Promise((resolve, reject) => {
-    chrome.storage.local.get([STORAGE_KEYS.NEWS_LIST], (result) => {
+    chrome.storage.local.get(['newsList'], (result) => {
       if (chrome.runtime.lastError) {
         console.error('[Storage] Failed to get news:', chrome.runtime.lastError)
         reject(chrome.runtime.lastError)
       } else {
-        const news = result[STORAGE_KEYS.NEWS_LIST] || []
+        const news = result.newsList || []
         console.log('[Storage] Retrieved news from storage:', news.length, 'items')
         resolve(news)
       }
@@ -32,7 +32,7 @@ export async function getNewsList(): Promise<News[]> {
 export async function setNewsList(news: News[]): Promise<void> {
   console.log('[Storage] Saving news list:', news.length, 'items')
   return new Promise((resolve, reject) => {
-    chrome.storage.local.set({ [STORAGE_KEYS.NEWS_LIST]: news }, () => {
+    chrome.storage.local.set({ newsList: news }, () => {
       if (chrome.runtime.lastError) {
         console.error('[Storage] Failed to save news:', chrome.runtime.lastError)
         reject(chrome.runtime.lastError)

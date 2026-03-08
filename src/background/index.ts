@@ -109,13 +109,13 @@ async function handleUpdateStats(data: Partial<{ newsCount: number; lastUpdate: 
   })
 }
 
-// 扩展安装监听器
+// 扩展安装/更新监听器
 chrome.runtime.onInstalled.addListener(async (details) => {
   console.log('Extension installed/updated:', details.reason)
   await initializeStats()
-  // 首次安装时立即抓取新闻
-  if (details.reason === 'install') {
-    console.log('First install - fetching initial news')
+  // 首次安装或更新时都抓取新闻
+  if (details.reason === 'install' || details.reason === 'update') {
+    console.log('Extension install/update - fetching initial news')
     await handleRefreshData()
   }
 })
