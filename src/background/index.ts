@@ -18,7 +18,7 @@ const initializeStats = async () => {
 }
 
 // 消息监听器
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   console.log('Received message:', message)
 
   switch (message.type) {
@@ -66,7 +66,7 @@ async function handleRefreshData() {
 }
 
 // 更新统计数据
-async function handleUpdateStats(data) {
+async function handleUpdateStats(data: Partial<{ newsCount: number; lastUpdate: string }>) {
   const currentStats = await handleGetStats()
   await chrome.storage.local.set({
     stats: {
