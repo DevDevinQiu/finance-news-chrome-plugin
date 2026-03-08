@@ -6,13 +6,21 @@ afterEach(() => {
 })
 
 // Mock Chrome APIs
+const mockStorage = {
+  get: vi.fn((keys, callback) => {
+    if (callback) callback({})
+  }),
+  set: vi.fn((data, callback) => {
+    if (callback) callback()
+  }),
+  clear: vi.fn((callback) => {
+    if (callback) callback()
+  }),
+}
+
 vi.stubGlobal('chrome', {
   storage: {
-    local: {
-      get: vi.fn(),
-      set: vi.fn(),
-      clear: vi.fn(),
-    },
+    local: mockStorage,
   },
   alarms: {
     create: vi.fn(),
@@ -22,6 +30,7 @@ vi.stubGlobal('chrome', {
   runtime: {
     sendMessage: vi.fn(),
     onMessage: vi.fn(),
+    lastError: null,
   },
 } as unknown as typeof chrome)
 

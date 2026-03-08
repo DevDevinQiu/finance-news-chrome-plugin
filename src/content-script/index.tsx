@@ -1,234 +1,185 @@
 /**
- * Content Script - 在页面上注入新闻面板
+ * Content Script - 在页面上注入新闻面板（React 版本）
  */
 
-console.log('Content Script loaded')
+import { createRoot } from 'react-dom/client'
+import { useState, useEffect } from 'react'
+import { getNewsList } from '../shared/utils/storage'
+import { FinancePanel } from './components'
+import type { News } from '../shared/types/news'
 
-// 注入样式
+// 注入全局样式
 const injectStyles = () => {
+  // 检查是否已注入
+  if (document.getElementById('finance-news-styles')) {
+    return
+  }
+
   const style = document.createElement('style')
+  style.id = 'finance-news-styles'
   style.textContent = `
-    #finance-news-panel {
+    #finance-news-panel-container {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica',
         'Arial', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    #finance-news-panel::-webkit-scrollbar {
+    #finance-news-panel-container::-webkit-scrollbar {
       width: 6px;
     }
 
-    #finance-news-panel::-webkit-scrollbar-thumb {
-      background: #ccc;
+    #finance-news-panel-container::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
       border-radius: 3px;
     }
 
-    #finance-news-panel::-webkit-scrollbar-thumb:hover {
-      background: #999;
+    #finance-news-panel-container::-webkit-scrollbar-thumb {
+      background: rgba(102, 102, 102, 0.5);
+      border-radius: 3px;
+    }
+
+    #finance-news-panel-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(102, 102, 102, 0.7);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   `
   document.head.appendChild(style)
 }
 
-injectStyles()
+// 主应用组件
+function App() {
+  const [newsList, setNewsList] = useState<News[]>([])
+  const [loading, setLoading] = useState(true)
+  const [visible, setVisible] = useState(false)
 
-// 创建面板容器
-const createPanel = () => {
-  const panel = document.createElement('div')
-  panel.id = 'finance-news-panel'
-  panel.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 300px;
-    max-height: 80vh;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    z-index: 9999;
-    display: none;
-  `
-  return panel
-}
-
-// 创建面板头部
-const createPanelHeader = () => {
-  const header = document.createElement('div')
-  header.style.cssText = `
-    padding: 12px 16px;
-    background: #f5f5f5;
-    border-radius: 8px 8px 0 0;
-    border-bottom: 1px solid #e0e0e0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  `
-
-  const title = document.createElement('span')
-  title.textContent = '财经新闻'
-  title.style.fontWeight = 'bold'
-
-  const closeBtn = document.createElement('button')
-  closeBtn.textContent = '×'
-  closeBtn.style.cssText = `
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #666;
-  `
-  closeBtn.onclick = () => {
-    const panel = document.getElementById('finance-news-panel')
-    if (panel) {
-      panel.style.display = 'none'
+  // 从 Storage 加载新闻数据
+  const loadNews = async () => {
+    try {
+      setLoading(true)
+      const news = await getNewsList()
+      setNewsList(news)
+    } catch (error) {
+      console.error('Failed to load news:', error)
+      setNewsList([])
+    } finally {
+      setLoading(false)
     }
   }
 
-  header.appendChild(title)
-  header.appendChild(closeBtn)
+  // 初始加载
+  useEffect(() => {
+    loadNews()
+  }, [])
 
-  return header
-}
-
-// 创建新闻列表容器
-const createNewsList = () => {
-  const list = document.createElement('div')
-  list.id = 'finance-news-list'
-  list.style.cssText = `
-    padding: 12px;
-    overflow-y: auto;
-    max-height: calc(80vh - 50px);
-  `
-  return list
-}
-
-// 创建新闻项
-const createNewsItem = (news: { title: string; source: string; publish_time: string }) => {
-  const item = document.createElement('div')
-  item.style.cssText = `
-    padding: 10px;
-    border-bottom: 1px solid #f0f0f0;
-    cursor: pointer;
-    transition: background 0.2s;
-  `
-
-  item.innerHTML = `
-    <div style="font-weight: 500; margin-bottom: 4px;">${news.title}</div>
-    <div style="font-size: 12px; color: #888; display: flex; justify-content: space-between;">
-      <span>${news.source}</span>
-      <span>${news.publish_time}</span>
-    </div>
-  `
-
-  item.onmouseenter = () => {
-    item.style.background = '#f9f9f9'
-  }
-
-  item.onmouseleave = () => {
-    item.style.background = 'white'
-  }
-
-  return item
-}
-
-// 创建空状态
-const createEmptyState = () => {
-  const empty = document.createElement('div')
-  empty.style.cssText = `
-    padding: 40px 20px;
-    text-align: center;
-    color: #999;
-  `
-  empty.textContent = '暂无新闻数据'
-  return empty
-}
-
-// 创建切换按钮
-const createToggleBtn = () => {
-  const btn = document.createElement('button')
-  btn.textContent = '财经新闻'
-  btn.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 10px 16px;
-    background: #1976d2;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    z-index: 9999;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: background 0.2s;
-  `
-
-  btn.onmouseenter = () => {
-    btn.style.background = '#1565c0'
-  }
-
-  btn.onmouseleave = () => {
-    btn.style.background = '#1976d2'
-  }
-
-  btn.onclick = () => {
-    const panel = document.getElementById('finance-news-panel')
-    if (panel) {
-      panel.style.display = panel.style.display === 'none' ? 'block' : 'none'
-    }
-  }
-
-  return btn
-}
-
-// 初始化面板
-const initPanel = () => {
-  const panel = createPanel()
-  panel.appendChild(createPanelHeader())
-  panel.appendChild(createNewsList())
-  panel.appendChild(createEmptyState())
-
-  document.body.appendChild(panel)
-  document.body.appendChild(createToggleBtn())
-}
-
-// 从 Chrome Storage 加载新闻
-const loadNews = async () => {
-  try {
-    const result = await chrome.storage.local.get('newsList')
-    const newsList = result.newsList || []
-
-    const listContainer = document.getElementById('finance-news-list')
-    if (!listContainer) return
-
-    listContainer.innerHTML = ''
-
-    if (newsList.length === 0) {
-      listContainer.appendChild(createEmptyState())
-      return
+  // 监听 Storage 变化
+  useEffect(() => {
+    const handleStorageChange = (
+      changes: { [key: string]: chrome.storage.StorageChange },
+      areaName: string
+    ) => {
+      if (areaName === 'local' && changes.newsList) {
+        const newNews = changes.newsList.newValue || []
+        setNewsList(newNews)
+      }
     }
 
-    newsList.slice(0, 20).forEach((news: { title: string; source: string; publish_time: string }) => {
-      listContainer.appendChild(createNewsItem(news))
-    })
-  } catch (error) {
-    console.error('Failed to load news:', error)
-  }
-}
+    chrome.storage.onChanged.addListener(handleStorageChange)
 
-// 监听存储变化
-chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === 'local' && changes.newsList) {
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange)
+    }
+  }, [])
+
+  // 刷新数据
+  const handleRefresh = () => {
     loadNews()
   }
-})
+
+  // 处理新闻点击
+  const handleNewsClick = (news: News) => {
+    if (news.url) {
+      window.open(news.url, '_blank')
+    }
+  }
+
+  // 创建切换按钮
+  const ToggleButton = () => {
+    const buttonStyles = {
+      position: 'fixed' as const,
+      top: '20px',
+      right: '20px',
+      padding: '12px 20px',
+      background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
+      color: 'white',
+      border: 'none',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      fontSize: '14px',
+      fontWeight: '600',
+      zIndex: 9998,
+      boxShadow: '0 4px 12px rgba(25, 118, 210, 0.4)',
+      transition: 'all 0.3s ease',
+      backdropFilter: 'blur(10px)',
+    } as React.CSSProperties
+
+    return (
+      <button
+        style={buttonStyles}
+        onClick={() => setVisible(!visible)}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)'
+          e.currentTarget.style.boxShadow = '0 6px 16px rgba(25, 118, 210, 0.5)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)'
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(25, 118, 210, 0.4)'
+        }}
+      >
+        📊 财经新闻
+      </button>
+    )
+  }
+
+  return (
+    <>
+      <ToggleButton />
+      {visible && (
+        <FinancePanel
+          newsList={newsList}
+          loading={loading}
+          onRefresh={handleRefresh}
+          onNewsClick={handleNewsClick}
+        />
+      )}
+    </>
+  )
+}
+
+// 初始化 React 应用
+const initApp = () => {
+  // 注入样式
+  injectStyles()
+
+  // 创建容器
+  const container = document.createElement('div')
+  container.id = 'finance-news-panel-container'
+  document.body.appendChild(container)
+
+  // 渲染 React 应用
+  const root = createRoot(container)
+  root.render(<App />)
+}
 
 // 等待 DOM 加载完成
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    initPanel()
-    loadNews()
-  })
+  document.addEventListener('DOMContentLoaded', initApp)
 } else {
-  initPanel()
-  loadNews()
+  initApp()
 }
+
+console.log('Content Script loaded (React version)')
