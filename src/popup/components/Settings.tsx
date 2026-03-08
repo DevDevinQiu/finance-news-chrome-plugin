@@ -6,10 +6,9 @@ import type { Settings } from '../../shared/types/news'
 interface SettingsProps {
   settings: Settings
   onSettingsChange: (settings: Settings) => void
-  onRefresh: () => void
 }
 
-export default function Settings({ settings, onSettingsChange, onRefresh }: SettingsProps) {
+export default function Settings({ settings, onSettingsChange }: SettingsProps) {
   const [saving, setSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState('')
 
@@ -150,25 +149,6 @@ export default function Settings({ settings, onSettingsChange, onRefresh }: Sett
           {saveMessage}
         </div>
       )}
-
-      {/* 立即刷新按钮 */}
-      <button
-        onClick={onRefresh}
-        disabled={saving}
-        style={{
-          width: '100%',
-          padding: '8px 16px',
-          background: '#1976d2',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: saving ? 'not-allowed' : 'pointer',
-          fontSize: '14px',
-          opacity: saving ? 0.6 : 1
-        }}
-      >
-        {saving ? '保存中...' : '立即刷新'}
-      </button>
     </div>
   )
 }

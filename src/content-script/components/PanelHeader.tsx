@@ -88,6 +88,22 @@ export function PanelHeader({ isExpanded, onToggle, onRefresh }: PanelHeaderProp
         >
           🔄
         </button>
+
+        <button
+          style={styles.button}
+          onClick={() => chrome.runtime.openOptionsPage()}
+          title="打开设置"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#1565c0'
+            e.currentTarget.style.color = 'white'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.8)'
+            e.currentTarget.style.color = '#666'
+          }}
+        >
+          ⚙️
+        </button>
       </div>
     </div>
   )

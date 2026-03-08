@@ -123,27 +123,23 @@ function App() {
         <Settings
           settings={settings}
           onSettingsChange={handleSettingsChange}
-          onRefresh={handleRefresh}
         />
       </div>
 
-      {/* 打开完整设置 */}
-      <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #eee' }}>
-        <button
-          onClick={() => chrome.runtime.openOptionsPage()}
-          style={{
-            width: '100%',
-            padding: '8px 16px',
-            background: '#424242',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '14px'
-          }}
-        >
-          打开完整设置
-        </button>
+      {/* 设置区域 */}
+      <div
+        style={{
+          marginTop: '12px',
+          paddingTop: '16px',
+          borderTop: '1px solid #eee',
+          borderRadius: '6px',
+          backgroundColor: '#fafafa'
+        }}
+      >
+        <Settings
+          settings={settings}
+          onSettingsChange={handleSettingsChange}
+        />
       </div>
     </div>
   )
