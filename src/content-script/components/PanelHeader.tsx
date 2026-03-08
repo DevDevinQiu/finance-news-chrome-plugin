@@ -47,6 +47,8 @@ export function PanelHeader({ isExpanded, onToggle, onRefresh }: PanelHeaderProp
       alignItems: 'center',
       justifyContent: 'center',
       transition: 'all 0.2s ease',
+      zIndex: 10000,
+      pointerEvents: 'auto',
     } as React.CSSProperties,
   }
 

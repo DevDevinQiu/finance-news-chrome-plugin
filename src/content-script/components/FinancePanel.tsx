@@ -42,6 +42,7 @@ export function FinancePanel({
       border: '1px solid rgba(255, 255, 255, 0.4)',
       overflow: 'hidden',
       transition: 'all 0.3s ease',
+      pointerEvents: 'auto',
     } as React.CSSProperties,
     collapsedPanel: {
       position: 'fixed' as const,
@@ -55,6 +56,7 @@ export function FinancePanel({
       zIndex: 9999,
       border: '1px solid rgba(255, 255, 255, 0.4)',
       overflow: 'hidden',
+      pointerEvents: 'auto',
     } as React.CSSProperties,
   }
 
