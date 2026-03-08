@@ -62,9 +62,11 @@ function App() {
     try {
       setLoading(true)
       const news = await getNewsList()
+      console.log('[Content Script] Loaded news from storage:', news)
+      console.log('[Content Script] News count:', news.length)
       setNewsList(news)
     } catch (error) {
-      console.error('Failed to load news:', error)
+      console.error('[Content Script] Failed to load news:', error)
       setNewsList([])
     } finally {
       setLoading(false)
