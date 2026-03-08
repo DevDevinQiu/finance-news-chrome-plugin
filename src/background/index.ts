@@ -44,6 +44,12 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         .catch((error) => sendResponse({ success: false, error: error.message }))
       return true
 
+    case 'OPEN_OPTIONS':
+      handleOpenOptions()
+        .then(() => sendResponse({ success: true }))
+        .catch((error) => sendResponse({ success: false, error: error.message }))
+      return true
+
     default:
       console.log('Unknown message type:', message.type)
       sendResponse({ success: false, error: 'Unknown message type' })
@@ -107,6 +113,12 @@ async function handleUpdateStats(data: Partial<{ newsCount: number; lastUpdate: 
       ...data
     }
   })
+}
+
+// 打开选项页
+async function handleOpenOptions() {
+  console.log('Opening options page')
+  chrome.runtime.openOptionsPage()
 }
 
 // 扩展安装/更新监听器

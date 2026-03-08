@@ -91,7 +91,7 @@ export function PanelHeader({ isExpanded, onToggle, onRefresh }: PanelHeaderProp
 
         <button
           style={styles.button}
-          onClick={() => window.open(chrome.runtime.getURL('/options.html'))}
+          onClick={() => chrome.runtime.sendMessage({ type: 'OPEN_OPTIONS' })}
           title="打开设置"
           onMouseEnter={(e) => {
             e.currentTarget.style.background = '#1565c0'
